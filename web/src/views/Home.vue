@@ -93,20 +93,16 @@ for (let i = 0; i < 23; i++) {
 export default defineComponent({
   name: 'Home',
   setup() {
-    console.log("setup");
     const ebooks = ref();
     const ebook1 = reactive({books:[]});
 
 
 
     onMounted( ()=>{
-      console.log("onMounted222");
       axios.get("/ebook/list").then((response) => {
-        console.log(response);
         const data = response.data;
         ebooks.value = data.content;
         ebook1.books = data.content;
-
       });
     })
 
@@ -130,8 +126,6 @@ export default defineComponent({
       pagination,
       actions,
     }
-
-
 
   }
 });
