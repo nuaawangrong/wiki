@@ -2,3 +2,6 @@ GET http://localhost:8880/ebook/list?name=Vue
 
 ###
 GET http://localhost:8880/ebook/list
+
+###
+GET http://localhost:8880/ebook/list?page=1&size=4
