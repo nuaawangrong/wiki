@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    是蓉儿呀
+    Spring Boot + Vue3 构建Wiki知识管理系统
   </a-layout-footer>
 </template>
 
