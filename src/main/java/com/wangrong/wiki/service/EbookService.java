@@ -1,5 +1,6 @@
 package com.wangrong.wiki.service;
 
+import com.github.pagehelper.PageHelper;
 import com.wangrong.wiki.domain.Ebook;
 import com.wangrong.wiki.domain.EbookExample;
 import com.wangrong.wiki.mapper.EbookMapper;
@@ -19,13 +20,18 @@ public class EbookService {
     private EbookMapper ebookMapper;
 
     public List<EbookResp> list(EbookReq req) {
+
+
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
 
         if(!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
+
+        PageHelper.startPage(2,2);
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
+
 
 //        List<EbookResp> respList = new ArrayList<>();
 //        for (Ebook ebook : ebookList) {
@@ -36,7 +42,6 @@ public class EbookService {
 //            EbookResp ebookResp = CopyUtil.copy(ebook, EbookResp.class);
 //            respList.add(ebookResp);
 //        }
-
 
         //列表复制
         List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
