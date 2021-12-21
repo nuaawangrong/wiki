@@ -73,19 +73,19 @@
 import { defineComponent, onMounted, ref, reactive,toRef  } from 'vue';
 import axios from 'axios';
 
-const listData: Record<string, string>[] = [];
-
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    description:
-        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
+// const listData: Record<string, string>[] = [];
+//
+// for (let i = 0; i < 23; i++) {
+//   listData.push({
+//     href: 'https://www.antdv.com/',
+//     title: `ant design vue part ${i}`,
+//     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+//     description:
+//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//     content:
+//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//   });
+// }
 
 export default defineComponent({
   name: 'Home',
@@ -94,10 +94,15 @@ export default defineComponent({
     const ebook1 = reactive({books:[]});
 
     onMounted( ()=>{
-      axios.get("/ebook/list").then((response) => {
+      axios.get("/ebook/list", {
+        params : {
+          page: 1,
+          size: 1000
+        }
+      }).then((response) => {
         const data = response.data;
-        ebooks.value = data.content;
-        ebook1.books = data.content;
+        ebooks.value = data.content.list;
+        // ebook1.books = data.content.list;
       });
     })
 
@@ -115,9 +120,8 @@ export default defineComponent({
 
     return {
       ebooks,
-      ebook2:toRef(ebook1, "books"),
-
-      listData,
+      // ebook2:toRef(ebook1, "books"),
+      // listData,
       pagination,
       actions,
     }
