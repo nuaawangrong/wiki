@@ -33,6 +33,15 @@ public class EbookController {
         ebookService.save(req);
         return resp;
     }
+
+    @DeleteMapping("/delete/{id}")
+    public CommonResp delete(@PathVariable long id) {
+        //删除成功后，不需要返回任何东西
+        CommonResp resp = new CommonResp<>();
+        ebookService.delete(id);
+        return resp;
+    }
+
 }
 
 
