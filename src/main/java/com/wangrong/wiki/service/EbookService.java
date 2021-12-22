@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -82,4 +81,6 @@ public class EbookService {
     public void delete(long id) {
         ebookMapper.deleteByPrimaryKey(id);
     }
+
+
 }
