@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.wangrong.wiki.domain.Ebook;
 import com.wangrong.wiki.domain.EbookExample;
 import com.wangrong.wiki.mapper.EbookMapper;
-import com.wangrong.wiki.req.EbookReq;
-import com.wangrong.wiki.resp.EbookResp;
+import com.wangrong.wiki.req.EbookQueryReq;
+import com.wangrong.wiki.req.EbookSaveReq;
+import com.wangrong.wiki.resp.EbookQueryResp;
 import com.wangrong.wiki.resp.PageResp;
 import com.wangrong.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -46,12 +47,26 @@ public class EbookService {
 //        }
 
         //列表复制
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp();
+        PageResp<EbookQueryResp> pageResp = new PageResp();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
 
         return pageResp;
+    }
+
+    /**
+     * 保存
+     */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if(ObjectUtils.isEmpty(req.getId())) {
+            //新增  未完成 todo
+            ebookMapper.insert(ebook);
+        } else {
+            //更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }

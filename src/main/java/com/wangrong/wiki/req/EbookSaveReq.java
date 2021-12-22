@@ -1,6 +1,6 @@
-package com.wangrong.wiki.resp;
+package com.wangrong.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;
