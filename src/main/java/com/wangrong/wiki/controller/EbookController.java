@@ -28,7 +28,7 @@ public class EbookController {
     }
 
     @PostMapping("/save")
-    public CommonResp save(@RequestBody EbookSaveReq req) {
+    public CommonResp save(@Valid @RequestBody EbookSaveReq req) {
         //保存成功后，不需要返回任何东西
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);

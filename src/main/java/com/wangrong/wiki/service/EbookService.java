@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -63,7 +64,7 @@ public class EbookService {
     /**
      * 保存
      */
-    public void save(EbookSaveReq req) {
+    public void save( EbookSaveReq req) {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if(ObjectUtils.isEmpty(req.getId())) {
             //新增  未完成 todo
