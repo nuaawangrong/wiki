@@ -101,7 +101,7 @@
   <insert id="insert" parameterType="com.wangrong.wiki.domain.Category">
     insert into category (id, parent, `name`, 
       sort)
-    values (#{id,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{parent,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
       #{sort,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.wangrong.wiki.domain.Category">
