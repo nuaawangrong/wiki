@@ -93,13 +93,11 @@
 
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
-import type { UnwrapRef } from 'vue';
-import type { FormProps } from 'ant-design-vue';
-import { onMounted, ref } from 'vue';
 
+import { defineComponent, onMounted, ref } from 'vue';
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+import {Tool} from "@/util/tool";
 
 
 export default defineComponent({
@@ -221,7 +219,8 @@ export default defineComponent({
      */
     const edit = (record : any) => {
       modalVisible.value = true;
-      ebook.value = record;
+      // ebook.value = record;
+      ebook.value = Tool.copy(record);
     }
 
     /**
