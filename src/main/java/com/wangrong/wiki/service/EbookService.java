@@ -10,6 +10,7 @@ import com.wangrong.wiki.req.EbookSaveReq;
 import com.wangrong.wiki.resp.EbookQueryResp;
 import com.wangrong.wiki.resp.PageResp;
 import com.wangrong.wiki.util.CopyUtil;
+import com.wangrong.wiki.util.SnowFlake;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -21,6 +22,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
@@ -63,6 +67,7 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if(ObjectUtils.isEmpty(req.getId())) {
             //新增  未完成 todo
+            ebook.setId(snowFlake.nextId());//雪花算法生成新的自增ID
             ebookMapper.insert(ebook);
         } else {
             //更新
