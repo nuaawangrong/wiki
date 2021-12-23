@@ -160,6 +160,7 @@ export default defineComponent({
      **/
     const handleQuery = (params: any) => {
       loading.value = true;
+      ebook.value = [];
       axios.get("/ebook/list",{
         params: {
           page : params.page,
@@ -237,7 +238,7 @@ export default defineComponent({
      */
     const add = () => {
       modalVisible.value = true;
-      ebook.value = {};
+      ebook.value = [];
     }
 
     /**
@@ -272,7 +273,6 @@ export default defineComponent({
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys,0);
-          console.log("树形结构: " + level1);
         } else {
           message.error(data.message);
         }

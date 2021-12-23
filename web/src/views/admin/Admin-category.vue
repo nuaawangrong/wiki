@@ -160,7 +160,6 @@ export default defineComponent({
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys.value,0);
-          console.log("树形结构: " + level1);
 
         } else {
           message.error(data.message);
@@ -204,7 +203,7 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       category.value = {};
-      console.log("category:" + category.value);
+      // console.log("category:" + category.value);
     }
 
     /**
