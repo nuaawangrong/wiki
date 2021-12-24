@@ -66,25 +66,25 @@
       v-model:visible="modalVisible"
       :confirm-loading="modalLoading"
       @ok="handleModalOk">
-    <a-form :model="category" :label-col="{span: 6}" :wrapper-col="{ span: 18 }">
+    <a-form :model="categoryModal" :label-col="{span: 6}" :wrapper-col="{ span: 18 }">
       <a-form-item label="名称">
-        <a-input v-model:value="category.name" />
+        <a-input v-model:value="categoryModal.name" />
       </a-form-item>
       <a-form-item label="父分类">
         <a-select
-            v-model:value="category.parent"
+            v-model:value="categoryModal.parent"
             ref="select"
         >
           <a-select-option value="0">
             无
           </a-select-option>
-          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="category.id === c.id">
+          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="categoryModal.id === c.id">
             {{c.name}}
           </a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="顺序">
-        <a-input v-model:value="category.sort" />
+        <a-input v-model:value="categoryModal.sort" />
       </a-form-item>
     </a-form>
 
@@ -170,12 +170,12 @@ export default defineComponent({
 
 
 //------------表单
-    const category = ref({});
+    const categoryModal = ref({});
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
-      axios.post("/category/save",category.value).then((response) => {
+      axios.post("/category/save",categoryModal.value).then((response) => {
         modalLoading.value = false;
         const data = response.data;
         if(data.success) {
@@ -194,7 +194,7 @@ export default defineComponent({
      */
     const edit = (record : any) => {
       modalVisible.value = true;
-      category.value = Tool.copy(record);
+      categoryModal.value = Tool.copy(record);
     }
 
     /**
@@ -202,8 +202,9 @@ export default defineComponent({
      */
     const add = () => {
       modalVisible.value = true;
-      category.value = {};
-      // console.log("category:" + category.value);
+      categoryModal.value = {};
+      console.log("add.click");
+      console.log("categoryModal:" , categoryModal.value);
     }
 
     /**
@@ -237,7 +238,7 @@ export default defineComponent({
       handleDelete,
       handleQuery,
 
-      category,
+      categoryModal,
       modalVisible,
       modalLoading,
       handleModalOk,
