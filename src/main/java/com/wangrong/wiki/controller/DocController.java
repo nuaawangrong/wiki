@@ -2,14 +2,15 @@ package com.wangrong.wiki.controller;
 
 import com.wangrong.wiki.req.DocQueryReq;
 import com.wangrong.wiki.req.DocSaveReq;
-import com.wangrong.wiki.resp.DocQueryResp;
 import com.wangrong.wiki.resp.CommonResp;
+import com.wangrong.wiki.resp.DocQueryResp;
 import com.wangrong.wiki.resp.PageResp;
 import com.wangrong.wiki.service.DocService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -44,11 +45,12 @@ public class DocController {
         return resp;
     }
 
-    @DeleteMapping("/delete/{id}")
-    public CommonResp delete(@PathVariable long id) {
+    @DeleteMapping("/delete/{idsStr}")
+    public CommonResp delete(@PathVariable String idsStr) {
         //删除成功后，不需要返回任何东西
         CommonResp resp = new CommonResp<>();
-        docService.delete(id);
+        List<String> list = Arrays.asList(idsStr.split(","));
+        docService.delete(list);
         return resp;
     }
 
