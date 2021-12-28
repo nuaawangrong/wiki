@@ -2,8 +2,10 @@ package com.wangrong.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wangrong.wiki.domain.Content;
 import com.wangrong.wiki.domain.Doc;
 import com.wangrong.wiki.domain.DocExample;
+import com.wangrong.wiki.mapper.ContentMapper;
 import com.wangrong.wiki.mapper.DocMapper;
 import com.wangrong.wiki.req.DocQueryReq;
 import com.wangrong.wiki.req.DocSaveReq;
@@ -22,6 +24,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -70,13 +75,21 @@ public class DocService {
      */
     public void save( DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if(ObjectUtils.isEmpty(req.getId())) {
-            //新增  未完成 todo
+            //新增
             doc.setId(snowFlake.nextId());//雪花算法生成新的自增ID
             docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         } else {
             //更新
             docMapper.updateByPrimaryKey(doc);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if(count == 0) {
+                contentMapper.insert(content);
+            }
         }
     }
 
