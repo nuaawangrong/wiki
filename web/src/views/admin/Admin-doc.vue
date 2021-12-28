@@ -158,14 +158,13 @@ export default defineComponent({
      * 数据查询
      **/
     const handleQuery = () => {
+      level1.value = [];
       axios.get("/doc/all").then((response) => {
         loading.value = false;
         const data = response.data;
         if(data.success) {
           docs.value = data.content;
-
-          level1.value = [];
-
+          loading.value = false;
           setTimeout(function () {
             level1.value = Tool.array2Tree(docs.value,0);
           },100)
@@ -176,6 +175,8 @@ export default defineComponent({
       });
       loading.value = true;
     };
+
+
 
 
 //------------表单
@@ -278,6 +279,8 @@ export default defineComponent({
     const edit = (record : any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
+      handleQueryContent();
+
       // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value, record.id);
@@ -313,10 +316,32 @@ export default defineComponent({
       });
     }
 
+    /**
+     * 内容查询
+     **/
+    const handleQueryContent = () => {
+      axios.get("/doc/find-content/" + doc.value.id).then((response) => {
+        const data = response.data;
+        if(data.success) {
+          editor.txt.html(data.message);
+          loading.value = false;
+          // setTimeout(function () {
+          //   level1.value = Tool.array2Tree(docs.value,0);
+          // },100)
+        } else {
+          message.error(data.message);
+        }
+      });
+      loading.value = true;
+    };
+
+
     onMounted(() => {
       handleQuery();
       editor.create();
     });
+
+
 
     return {
       param,

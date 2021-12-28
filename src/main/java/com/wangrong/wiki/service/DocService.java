@@ -42,8 +42,6 @@ public class DocService {
         return list;
     }
 
-
-
     public PageResp<DocQueryResp> list(DocQueryReq req) {
 
         DocExample docExample = new DocExample();
@@ -99,11 +97,17 @@ public class DocService {
     public void delete(long id) {
         docMapper.deleteByPrimaryKey(id);
     }
+
     public void delete(List<String> ids) {
         DocExample docExample = new DocExample();
         DocExample.Criteria criteria = docExample.createCriteria();
         criteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
+    }
+
+    public String findContent(long id) {
+        Content content =  contentMapper.selectByPrimaryKey(id);
+        return content.getContent();
     }
 
 }
