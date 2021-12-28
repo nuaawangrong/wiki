@@ -31,7 +31,7 @@
               :data-source="level1"
               :loading="loading"
               :pagination="false"
-              defaultExpandAllRows="true"
+              :defaultExpandAllRows="true"
               size="small"
           >
 
