@@ -68,7 +68,7 @@
               </a-form-item>
             </a-form>
           </p>
-          <a-form :model="doc" layout="vertical">
+          <a-form :model="doc" layout="vertical" >
             <a-form-item>
               <a-input v-model:value="doc.name" placeholder="名称"/>
             </a-form-item>
@@ -96,13 +96,6 @@
 
     </a-layout-content>
   </a-layout>
-
-<!--  <a-modal-->
-<!--      title="文档表单"-->
-<!--      v-model:visible="modalVisible"-->
-<!--      :confirm-loading="modalLoading"-->
-<!--      @ok="handleModalOk">-->
-<!--  </a-modal>-->
 
 </template>
 
@@ -195,13 +188,11 @@ export default defineComponent({
       modalLoading.value = true;
       doc.value.content = editor.txt.html();
 
-      console.log("editor content:", doc.value.content);
-
       axios.post("/doc/save",doc.value).then((response) => {
         modalLoading.value = false;
         const data = response.data;
         if(data.success) {
-          modalVisible.value = false;
+          message.success("保存成功");
 
           //重新加载列表
           handleQuery();
@@ -277,6 +268,8 @@ export default defineComponent({
      *  编辑
      */
     const edit = (record : any) => {
+      //清空富文本框
+      editor.txt.html("");
       modalVisible.value = true;
       doc.value = Tool.copy(record);
       handleQueryContent();
@@ -292,10 +285,13 @@ export default defineComponent({
      *  新增
      */
     const add = () => {
-      modalVisible.value = true;
+      //清空富文本框
+      editor.txt.html("");
       doc.value = {
         ebookId : route.query.ebookId,
       };
+      doc.value.sort = "";
+      doc.value.name = "";
       treeSelectData.value = Tool.copy(level1.value);
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: '无'});
@@ -323,7 +319,7 @@ export default defineComponent({
       axios.get("/doc/find-content/" + doc.value.id).then((response) => {
         const data = response.data;
         if(data.success) {
-          editor.txt.html(data.message);
+          editor.txt.html(data.content);
           loading.value = false;
           // setTimeout(function () {
           //   level1.value = Tool.array2Tree(docs.value,0);
