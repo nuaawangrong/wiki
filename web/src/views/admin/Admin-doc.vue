@@ -50,8 +50,6 @@
                 刪除
               </a-button>
             </a-popconfirm>
-
-
           </a-space>
         </template>
       </a-table>
@@ -82,8 +80,10 @@
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
+      <a-form-item label="内容">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
-
   </a-modal>
 
 </template>
@@ -96,7 +96,7 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
-
+import E from 'wangeditor';
 
 export default defineComponent({
   name: 'AdminDoc',
@@ -104,7 +104,7 @@ export default defineComponent({
 
   setup() {
     const route = useRoute();
-    console.log("路由：",route);
+    // console.log("路由：",route);
     const param = ref();
     param.value = {};
     const docs = ref();
@@ -154,11 +154,8 @@ export default defineComponent({
         if(data.success) {
           docs.value = data.content;
 
-          console.log("原始数组: " + docs.value);
-
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
-
         } else {
           message.error(data.message);
         }
@@ -175,6 +172,8 @@ export default defineComponent({
     const doc = ref({});
     const modalVisible = ref(false);
     const modalLoading = ref(false);
+    const editor = new E('#content');
+
     const handleModalOk = () => {
       modalLoading.value = true;
       axios.post("/doc/save",doc.value).then((response) => {
@@ -201,7 +200,7 @@ export default defineComponent({
         const node = treeSelectData[i];
         if (node.id === id) {
           // 如果当前节点就是目标节点
-          console.log("disabled", node);
+          // console.log("disabled", node);
           // 将目标节点设置为disabled
           node.disabled = true;
 
@@ -259,13 +258,15 @@ export default defineComponent({
     const edit = (record : any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
-
       // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value, record.id);
-
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: '无'});
+
+      setTimeout(function () {
+        editor.create();
+      },100);
     }
 
     /**
@@ -276,11 +277,13 @@ export default defineComponent({
       doc.value = {
         ebookId : route.query.ebookId,
       };
-
       treeSelectData.value = Tool.copy(level1.value);
-
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: '无'});
+
+      setTimeout(function () {
+        editor.create();
+      },100);
     }
 
     /**
@@ -297,7 +300,6 @@ export default defineComponent({
         }
       });
     }
-
 
     onMounted(() => {
       handleQuery();
