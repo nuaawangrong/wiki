@@ -8,6 +8,7 @@ import com.wangrong.wiki.exception.BusinessException;
 import com.wangrong.wiki.exception.BusinessExceptionCode;
 import com.wangrong.wiki.mapper.UserMapper;
 import com.wangrong.wiki.req.UserQueryReq;
+import com.wangrong.wiki.req.UserResetPasswordReq;
 import com.wangrong.wiki.req.UserSaveReq;
 import com.wangrong.wiki.resp.PageResp;
 import com.wangrong.wiki.resp.UserQueryResp;
@@ -93,6 +94,14 @@ public class UserService {
         } else {
             return userList.get(0);
         }
+    }
+
+    /**
+     * 重置密码
+     */
+    public void resetPassword( UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
 }

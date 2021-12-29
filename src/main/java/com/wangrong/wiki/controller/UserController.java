@@ -1,6 +1,7 @@
 package com.wangrong.wiki.controller;
 
 import com.wangrong.wiki.req.UserQueryReq;
+import com.wangrong.wiki.req.UserResetPasswordReq;
 import com.wangrong.wiki.req.UserSaveReq;
 import com.wangrong.wiki.resp.CommonResp;
 import com.wangrong.wiki.resp.PageResp;
@@ -44,6 +45,17 @@ public class UserController {
         userService.delete(id);
         return resp;
     }
+
+
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req) {
+        //保存成功后，不需要返回任何东西
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
+        return resp;
+    }
+
 
 }
 

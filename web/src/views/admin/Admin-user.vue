@@ -38,9 +38,9 @@
 
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-<!--            <a-button type="primary" @click="resetPassword(record)">-->
-<!--              重置密码-->
-<!--            </a-button>-->
+            <a-button type="primary" @click="resetPassword(record)">
+              重置密码
+            </a-button>
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
