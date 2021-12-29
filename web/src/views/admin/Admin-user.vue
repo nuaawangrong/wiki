@@ -67,8 +67,8 @@
       @ok="handleModalOk">
 
     <a-form :model="user" :label-col="{span: 6}" :wrapper-col="{ span: 18 }">
-      <a-form-item label="登录名">
-        <a-input v-model:value="user.loginName" />
+      <a-form-item label="登录名" >
+        <a-input v-model:value="user.loginName" :disabled="!!user.id" />
       </a-form-item>
       <a-form-item label="昵称">
         <a-input v-model:value="user.name" />
@@ -216,6 +216,9 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       user.value = {};
+      user.value.loginName = "";
+      user.value.name = "";
+      user.value.password = "";
     }
 
     /**
