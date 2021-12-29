@@ -3,9 +3,10 @@ package com.wangrong.wiki.controller;
 import com.wangrong.wiki.req.UserQueryReq;
 import com.wangrong.wiki.req.UserSaveReq;
 import com.wangrong.wiki.resp.CommonResp;
-import com.wangrong.wiki.resp.UserQueryResp;
 import com.wangrong.wiki.resp.PageResp;
+import com.wangrong.wiki.resp.UserQueryResp;
 import com.wangrong.wiki.service.UserService;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,6 +31,7 @@ public class UserController {
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req) {
         //保存成功后，不需要返回任何东西
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;
