@@ -4,14 +4,17 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wangrong.wiki.domain.User;
 import com.wangrong.wiki.domain.UserExample;
+import com.wangrong.wiki.exception.BusinessException;
+import com.wangrong.wiki.exception.BusinessExceptionCode;
 import com.wangrong.wiki.mapper.UserMapper;
 import com.wangrong.wiki.req.UserQueryReq;
 import com.wangrong.wiki.req.UserSaveReq;
-import com.wangrong.wiki.resp.UserQueryResp;
 import com.wangrong.wiki.resp.PageResp;
+import com.wangrong.wiki.resp.UserQueryResp;
 import com.wangrong.wiki.util.CopyUtil;
 import com.wangrong.wiki.util.SnowFlake;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -40,16 +43,6 @@ public class UserService {
 
         PageInfo<User> pageInfo = new PageInfo<>(userList);
 
-//        List<UserResp> respList = new ArrayList<>();
-//        for (User user : userList) {
-////            UserResp userResp = new UserResp();
-////            BeanUtils.copyProperties(user,userResp);
-//
-//            对象复制
-//            UserResp userResp = CopyUtil.copy(user, UserResp.class);
-//            respList.add(userResp);
-//        }
-
         //列表复制
         List<UserQueryResp> list = CopyUtil.copyList(userList, UserQueryResp.class);
 
@@ -66,9 +59,15 @@ public class UserService {
     public void save( UserSaveReq req) {
         User user = CopyUtil.copy(req, User.class);
         if(ObjectUtils.isEmpty(req.getId())) {
-            //新增  未完成 todo
-            user.setId(snowFlake.nextId());//雪花算法生成新的自增ID
-            userMapper.insert(user);
+            User userDB = selectByLoginName(req.getLoginName());
+            if(ObjectUtils.isEmpty(userDB)) {
+                //新增
+                user.setId(snowFlake.nextId());//雪花算法生成新的自增ID
+                userMapper.insert(user);
+            } else {
+                //用户名已存在
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
         } else {
             //更新
             userMapper.updateByPrimaryKey(user);
@@ -82,5 +81,16 @@ public class UserService {
         userMapper.deleteByPrimaryKey(id);
     }
 
+    public User selectByLoginName(String loginName) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(userList)) {
+            return null;
+        } else {
+            return userList.get(0);
+        }
+    }
 
 }
