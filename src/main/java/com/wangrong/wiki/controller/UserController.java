@@ -1,10 +1,12 @@
 package com.wangrong.wiki.controller;
 
+import com.wangrong.wiki.req.UserLoginReq;
 import com.wangrong.wiki.req.UserQueryReq;
 import com.wangrong.wiki.req.UserResetPasswordReq;
 import com.wangrong.wiki.req.UserSaveReq;
 import com.wangrong.wiki.resp.CommonResp;
 import com.wangrong.wiki.resp.PageResp;
+import com.wangrong.wiki.resp.UserLoginResp;
 import com.wangrong.wiki.resp.UserQueryResp;
 import com.wangrong.wiki.service.UserService;
 import org.springframework.util.DigestUtils;
@@ -46,13 +48,22 @@ public class UserController {
         return resp;
     }
 
-
     @PostMapping("/reset-password")
     public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req) {
         //保存成功后，不需要返回任何东西
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp login(@Valid @RequestBody UserLoginReq req) {
+        //登录成功后，返回用户信息
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 
