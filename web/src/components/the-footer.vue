@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Spring Boot + Vue3 构建Wiki知识管理系统, 欢迎：{{user.name}}
+    Spring Boot + Vue3 构建Wiki知识管理系统<span v-show="user.id"> , 欢迎：{{user.name}}</span>
   </a-layout-footer>
 </template>
 
