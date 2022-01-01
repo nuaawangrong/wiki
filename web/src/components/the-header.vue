@@ -1,12 +1,27 @@
 <template>
   <a-layout-header class="header">
     <div class="logo" />
-    <a class="login-menu" v-show="!!user.id" >
-      <span>您好：{{ user.name }}</span>
-    </a>
+
     <a class="login-menu" v-show="!user.id" @click="showLoginModal">
       <span>登录</span>
     </a>
+
+    <a-popconfirm
+        title="确认退出登录?"
+        ok-text="是"
+        cancel-text="否"
+        @confirm="logout()"
+    >
+      <a class="login-menu" v-show="!!user.id" >
+        <span>退出登录</span>
+      </a>
+    </a-popconfirm>
+
+    <a class="login-menu" v-show="!!user.id" >
+      <span>您好：{{ user.name }}</span>
+    </a>
+
+
 
     <a-modal
         title="登录"
@@ -75,6 +90,7 @@ export default defineComponent({
       loginModalVisible.value = true;
     };
 
+    //登录
     const login = () => {
       console.log("开始登录");
       loginModalLoading.value = true;
@@ -85,8 +101,23 @@ export default defineComponent({
         if(data.success) {
           loginModalVisible.value = false;
           message.success("登录成功");
-          store.commit("setUser", user.value);
+          store.commit("setUser", data.content);
 
+        } else {
+          message.error(data.message);
+        }
+      })
+    }
+
+    //退出登录
+    const logout = () => {
+      console.log("退出登录");
+      axios.get('/user/logout/' + user.value.token).then((respone) => {
+        const data = respone.data;
+        if(data.success) {
+          message.success("退出登录成功");
+
+          store.commit("setUser", {});
         } else {
           message.error(data.message);
         }
@@ -99,6 +130,7 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
+      logout,
       user,
     }
 
@@ -120,6 +152,6 @@ export default defineComponent({
 .login-menu {
   float: right;
   color: white;
-  padding-left: 10px;
+  padding-left: 25px;
 }
 </style>
