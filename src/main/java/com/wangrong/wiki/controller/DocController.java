@@ -55,18 +55,18 @@ public class DocController {
     }
 
     @GetMapping("/find-content/{id}")
-    public CommonResp findContent(@PathVariable long id) {
+    public CommonResp findContent(@PathVariable Long id) {
         CommonResp< String > resp = new CommonResp<>();
         String content = docService.findContent(id);
         resp.setContent(content);
         return resp;
     }
 
+    @GetMapping("/vote/{id}")
+    public CommonResp vote(@PathVariable Long id) {
+        CommonResp commonResp = new CommonResp();
+        docService.vote(id);
+        return commonResp;
+    }
 
 }
-
-
-
-
-
-
