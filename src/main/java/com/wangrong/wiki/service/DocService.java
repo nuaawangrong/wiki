@@ -7,6 +7,7 @@ import com.wangrong.wiki.domain.Doc;
 import com.wangrong.wiki.domain.DocExample;
 import com.wangrong.wiki.mapper.ContentMapper;
 import com.wangrong.wiki.mapper.DocMapper;
+import com.wangrong.wiki.mapper.DocMapperCust;
 import com.wangrong.wiki.req.DocQueryReq;
 import com.wangrong.wiki.req.DocSaveReq;
 import com.wangrong.wiki.resp.DocQueryResp;
@@ -24,6 +25,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -78,6 +82,8 @@ public class DocService {
         if(ObjectUtils.isEmpty(req.getId())) {
             //新增
             doc.setId(snowFlake.nextId());//雪花算法生成新的自增ID
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -111,6 +117,8 @@ public class DocService {
         if(content == null) {
             return "";
         } else {
+            //文档阅读数加一
+            docMapperCust.increaseViewCount(id);
             return content.getContent();
         }
     }
