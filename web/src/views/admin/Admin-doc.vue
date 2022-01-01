@@ -177,6 +177,7 @@ export default defineComponent({
         loading.value = false;
         const data = response.data;
         if(data.success) {
+
           doc.value = {
             ebookId : route.query.ebookId,
           };
@@ -186,8 +187,15 @@ export default defineComponent({
 
           //父文档下拉框初始化，相当于点击新增
           treeSelectData.value = Tool.copy(level1.value);
+
           //为选择树添加一个“无”
+          console.log("treeSelectData.value: ", treeSelectData.value);
+          if(treeSelectData.value == undefined) {
+            //当文档表中无数据时，treeSelectData.value为undefined,不能为选择树添加一个“无”，需要强制将其赋值为空数组
+            treeSelectData.value = [];
+          }
           treeSelectData.value.unshift({id: 0, name: '无'});
+
 
         } else {
           message.error(data.message);
