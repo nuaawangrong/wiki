@@ -2,6 +2,7 @@ package com.wangrong.wiki.aspect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;
+import com.wangrong.wiki.util.RequestContext;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -51,7 +52,7 @@ public class LogAspect {
         LOG.info("类名方法: {}.{}", signature.getDeclaringTypeName(), name);
         LOG.info("远程地址: {}", request.getRemoteAddr());
 
-//        RequestContext.setRemoteAddr(getRemoteIp(request));
+        RequestContext.setRemoteAddr(getRemoteIp(request));
 
         // 打印请求参数
         Object[] args = joinPoint.getArgs();
