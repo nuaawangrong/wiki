@@ -21,6 +21,7 @@ import com.wangrong.wiki.util.SnowFlake;
 import com.wangrong.wiki.websocket.WebSocketServer;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -91,6 +92,8 @@ public class DocService {
     /**
      * 保存
      */
+    //Transactional  事务注解
+    @Transactional
     public void save( DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
         Content content = CopyUtil.copy(req, Content.class);
