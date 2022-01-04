@@ -18,6 +18,7 @@ import com.wangrong.wiki.util.CopyUtil;
 import com.wangrong.wiki.util.RedisUtil;
 import com.wangrong.wiki.util.RequestContext;
 import com.wangrong.wiki.util.SnowFlake;
+import com.wangrong.wiki.websocket.WebSocketServer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -41,6 +42,9 @@ public class DocService {
 
     @Resource
     private RedisUtil redisUtil;
+
+    @Resource
+    private WebSocketServer webSocketServer;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample( );
@@ -142,6 +146,11 @@ public class DocService {
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
+
+        //推送消息
+        Doc docDB = docMapper.selectByPrimaryKey(id);
+        webSocketServer.sendInfo("【" + docDB.getName() + "】被点赞！！！");
+
     }
 
     public void updateEbookInfo() {
