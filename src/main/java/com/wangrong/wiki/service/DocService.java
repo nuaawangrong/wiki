@@ -19,6 +19,7 @@ import com.wangrong.wiki.util.RedisUtil;
 import com.wangrong.wiki.util.RequestContext;
 import com.wangrong.wiki.util.SnowFlake;
 import com.wangrong.wiki.websocket.WebSocketServer;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -152,7 +153,8 @@ public class DocService {
 
         //推送消息
         Doc docDB = docMapper.selectByPrimaryKey(id);
-        wsService.sendInfo("【" + docDB.getName() + "】被点赞！！！");
+        String logId = MDC.get("LOG_ID");
+        wsService.sendInfo("【" + docDB.getName() + "】被点赞！！！",logId);
     }
 
     public void updateEbookInfo() {
