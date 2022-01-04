@@ -133,3 +133,28 @@ create table `demo` (
 ) engine=innodb default charset=utf8mb4 comment='测试';
 
 insert into `demo` (id, name) values (1, '测试');
+
+
+
+#  为所有的电子书生成一条今天的记录（如果还没有）
+#  更新总阅读数，总点赞数
+#  更新今日阅读数，今日点赞数
+
+INSERT INTO ebook_snapshot(ebook_id, `date`, view_count, vote_count, view_increase, vote_increase)
+SELECT t1.id, CURDATE(), 0, 0, 0, 0 FROM ebook t1 WHERE NOT EXISTS(SELECT 1 FROM ebook_snapshot t2 WHERE
+        t1.id = t2.ebook_id AND t2.`date` = CURDATE());
+
+UPDATE ebook_snapshot t1, ebook t2
+SET t1.view_count = t2.view_count, t1.vote_count = t2.vote_count
+WHERE t1.ebook_id = t2.id AND t1.`date` = CURDATE();
+
+#  获取昨天的数据
+SELECT t1.`date` AS 昨天, t1.ebook_id, view_count, vote_count from ebook_snapshot t1
+WHERE t1.`date`  = DATE_SUB(CURDATE(),INTERVAL 1 DAY)
+
+UPDATE ebook_snapshot t1 LEFT JOIN (SELECT `date` AS 昨天日期, ebook_id, view_count, vote_count from ebook_snapshot
+                                    WHERE `date`  = DATE_SUB(CURDATE(),INTERVAL 1 DAY)) t2
+    ON t1.ebook_id = t2.ebook_id
+SET t1.view_increase = t1.view_count - IFNULL(t2.view_count, 0) ,
+    t1.vote_increase = t1.vote_count - IFNULL(t2.vote_count, 0)
+WHERE t1.`date` = CURDATE();
