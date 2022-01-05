@@ -30,3 +30,4 @@ GET http://localhost:8880/redis/get/4040203792480
 Accept: application/json
 
 ###
+GET http://localhost:8880/ebook-snapshot/get-30-statistic

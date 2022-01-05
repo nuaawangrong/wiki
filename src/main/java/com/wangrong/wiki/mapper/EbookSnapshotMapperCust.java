@@ -10,4 +10,6 @@ public interface EbookSnapshotMapperCust {
 
     List<StatisticResp> getStatistic();
 
+    List<StatisticResp> get30Statistic();
+
 }
